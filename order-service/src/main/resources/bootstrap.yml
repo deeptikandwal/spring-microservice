@@ -1,0 +1,5 @@
+spring:
+  application:
+    name: order-service   # must match folder name in repo
+  config:
+    import: "configserver:http://localhost:8888"
