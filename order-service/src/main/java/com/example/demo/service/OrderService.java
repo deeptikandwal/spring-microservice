@@ -13,6 +13,8 @@ import com.example.demo.entity.PaymentDto;
 import com.example.demo.repository.OrderRepository;
 import com.example.demo.repository.PaymentClient;
 
+import feign.FeignException;
+
 @Service
 public class OrderService {
 
@@ -20,7 +22,6 @@ public class OrderService {
 	private ModelMapper modelMapper;
 	private PaymentClient paymentClient;
 
-	 // ✅ Constructor injection (preferred over @Autowired on fields)
     public OrderService(PaymentClient paymentClient,
                         OrderRepository orderRepository,
                         ModelMapper modelMapper) {
@@ -44,11 +45,17 @@ public class OrderService {
 	    Orders order = modelMapper.map(orderDto, Orders.class);
 	    Orders savedOrder = orderRepository.save(order);
 	    PaymentDto payment = new PaymentDto();
-	    payment.setOrderId(savedOrder.getId()); // DB-generated ID
+	    payment.setOrderId(savedOrder.getId()); 
 	    payment.setAmount(savedOrder.getPrice());
+	    String response;
 
-	    PaymentDto response = paymentClient.doPayment(payment);
-	    return "Order placed. Payment Status: "+response.getStatus();
+	    try {
+	    	payment.setStatus("Success");
+	        response = paymentClient.doPayment(payment);
+	    } catch (FeignException e) {
+	        response = "Payment failed: " + e.getMessage();
+	    }
+	    return response;
 	}
 
 

@@ -8,10 +8,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 import com.example.demo.entity.PaymentDto;
 
-@FeignClient(name = "payment-service")  // Must match spring.application.name of Payment Service
+@FeignClient(name = "payment-service")
 public interface PaymentClient {
 
-    @PostMapping("/doPayment")
-    PaymentDto doPayment(@RequestBody PaymentDto payment);
+    @PostMapping("/payments/doPayment")
+    String doPayment(@RequestBody PaymentDto payment);
 
 }
