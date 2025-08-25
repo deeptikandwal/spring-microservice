@@ -1,0 +1,19 @@
+server:
+  port: 8888
+
+spring:
+  application:
+    name: config-server
+  cloud:
+    config:
+      server:
+        git:
+         # uri: /Users/nandini/Documents/nandini/eclipseApps/config-repo
+          uri: https://github.com/deeptikandwal/config-repo
+          username: ${git_username}
+          password: ${git_password}
+          clone-on-start: true
+          default-label: main   # or master, depending on your branch name
+          search-paths:
+            - order-service
+            - payment-service
